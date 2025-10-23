@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACCORD Event TECH</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #0e0e0e;
+    color: #f0f0f0;
+}
+
+/* ======= GÓRNY BANER ======= */
+header {
+    position: relative;
+    overflow: hidden;
+    height: 270px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(90deg, #111, #1a1a1a);
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,100,0,0.2), rgba(0,0,0,0.1), rgba(255,100,0,0.2));
+    animation: moveLights 6s infinite linear;
+}
+
+@keyframes moveLights {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* === efekt światła przesuwającego się po napisie === */
+header h1 {
+    font-size: 52px;
+    color: #ff6600;
+    margin: 0;
+    z-index: 1;
+    font-weight: 700;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+header h1::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+    transform: skewX(-20deg);
+    animation: lightSweep 4s infinite;
+}
+
+@keyframes lightSweep {
+    0% { left: -75%; }
+    100% { left: 130%; }
+}
+
+header p {
+    font-size: 18px;
+    color: #ccc;
+    z-index: 1;
+}
+/* === RUCHOME TŁO W NAGŁÓWKU === */
+.header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%; /* żeby można było płynnie przesuwać */
+    height: 100%;
+    background: url('background.jpg') repeat-x center/cover; /* 👈 wstaw tu swoją grafikę */
+    animation: moveBackground 30s linear infinite; /* prędkość przesuwania */
+    z-index: 0;
+    opacity: 0.35; /* delikatne przyciemnienie pod poświatę */
+}
+
+@keyframes moveBackground {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* upewniamy się, że treść jest nad tłem */
+header h1, header p, .cta-button, .banner-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* ======= MIGAJĄCY NAPIS ======= */
+.banner-text {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    color: #ff6600;
+    font-weight: bold;
+    font-size: 20px;
+    animation: slideText 12s linear infinite;
+    white-space: nowrap;
+}
+
+@keyframes slideText {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* ======= NAWIGACJA ======= */
+nav {
+    background-color: #1a1a1a;
+    text-align: center;
+    padding: 10px;
+}
+
+nav a {
+    color: #f0f0f0;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #ff6600;
+}
+nav {
+  position: sticky;   /* sprawia, że pasek się przykleja przy przewijaniu */
+  top: 0;             /* trzyma się górnej krawędzi */
+  z-index: 1000;      /* dzięki temu pasek jest nad resztą sekcji */
+  background: rgba(0, 0, 0, 0.85); /* półprzezroczyste tło, żeby było czytelne */
+  backdrop-filter: blur(6px);      /* lekki efekt rozmycia tła (opcjonalny, nowoczesny) */
+}
+
+
+/* ======= SEKCJE ======= */
+section {
+    padding: 50px 10%;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s ease;
+}
+
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.oferta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 30px;
+	margin: 0 auto;
+	max-width: 1200px; /* utrzymuje szerokość strony spójną */
+}
+
+.oferta div {
+    position: relative;
+    width: 250px;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Tło dla poszczególnych kafelków */
+.oferta div:nth-child(1) {
+    background: url('background.jpg') center/cover no-repeat;
+}
+.oferta div:nth-child(2) {
+    background: url('background.jpg') center/cover no-repeat;
+}
+.oferta div:nth-child(3) {
+    background: url('background.jpg') center/cover no-repeat;
+}
+
+/* Overlay dla lepszej czytelności tekstu */
+.oferta div::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); /* przyciemnia tło */
+    border-radius: 10px;
+    z-index: 0;
+}
+
+/* Tekst nad overlayem */
+.oferta div h3,
+.oferta div p {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hover efekt */
+.oferta div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 102, 0, 0.5);
+}
+
+
+/* ======= GALERIA + LIGHTBOX ======= */
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin: 20px auto 0 auto;
+    max-width: 1200px; /* dopasowana szerokość jak reszta sekcji */
+}
+
+.galeria img {
+    width: 100%;
+    height: 250px;       /* jednolita wysokość, dopasuj do event4.jpg */
+    object-fit: cover;   /* przycina nadmiar, zachowuje proporcje */
+    border-radius: 10px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+}
+
+.galeria img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 102, 0, 0.6);
+}
+
+/* Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.lightbox img {
+    display: block;
+    margin: auto;
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 10px;
+}
+
+.lightbox:target {
+    display: block;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.close:hover {
+    color: #ff6600;
+}
+
+/* CTA Button */
+.cta-button {
+    display: inline-block;
+    margin: 10px auto 60px auto;
+    padding: 12px 30px;
+    background: #ff6600;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.5s forwards, pulse 3s ease-in-out 3s infinite;
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(255, 102, 0, 0); transform: scale(1); }
+    50% { box-shadow: 0 0 20px rgba(255, 102, 0, 0.6); transform: scale(1.04); }
+}
+
+.cta-button:hover {
+    background: #ffa64d;
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(255, 102, 0, 0.8);
+}
+
+/* Pasek marek */
+@keyframes moveBrands {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+footer {
+    background-color: #111;
+    text-align: center;   /* <-- to ustawia wyśrodkowanie tekstu */
+    padding: 30px 10px;
+    color: #888;
+    display: flex;        /* używamy flexboxa dla pewności */
+    justify-content: center;
+    align-items: center;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-bg"></div> <!-- 🔸 ruchome tło -->
+    <h1>ACCORD Event TECH</h1>
+    <p>Profesjonalna obsługa techniczna eventów – dźwięk, światło, scena, multimedia</p>
+    <a href="#kontakt" class="cta-button">Zamów realizację</a>
+    <div class="banner-text">🎶 Światło • Dźwięk • Scena • Multimedia 🎶</div>
+</header>
+
+<nav>
+    <a href="#onas">O nas</a>
+    <a href="#oferta">Oferta</a>
+    <a href="#galeria">Galeria</a>
+    <a href="#kontakt">Kontakt</a>
+</nav>
+
+<section id="onas">
+    <h2>O nas</h2>
+    <p>
+        Specjalizujemy się w kompleksowej obsłudze technicznej wydarzeń. Zapewniamy nagłośnienie, oświetlenie, scenę oraz multimedia na koncerty, festyny, konferencje <br>i imprezy firmowe. Posiadamy nowoczesny sprzęt i kreatywne podejście do każdego projektu.
+        Od kameralnych konferencji po koncerty plenerowe – dbamy o każdy szczegół techniczny i wizualny.
+    </p>
+    <p>
+        Dysponujemy profesjonalnym zapleczem technicznym: systemami nagłośnienia, oświetlenia, ekranami LED, scenami mobilnymi
+        oraz zapleczem multimedialnym.Gwarantujemy wysoką jakość dźwięku i oraz niezawodność sprzętu.
+    </p>
+    <p>
+        Współpracujemy z agencjami eventowymi, firmami, instytucjami publicznymi i artystami. 
+        Zaufali nam organizatorzy koncertów, festynów, gal oraz imprez firmowych.
+    </p>
+	</section>
+
+<section id="oferta">
+    <h2>Oferta</h2>
+    <div class="oferta">
+        <div>
+            <h3>🎤 Nagłośnienie</h3>
+            <p>Profesjonalne systemy audio do małych i dużych scen. Realizacja dźwięku live i konferencji.</p>
+        </div>
+        <div>
+            <h3>💡 Oświetlenie</h3>
+            <p>Dynamiczne światło sceniczne i architektoniczne. Efekty LED, sterowanie DMX.</p>
+        </div>
+        <div>
+            <h3>🎪 Scena i multimedia</h3>
+            <p>Sceny mobilne, ekrany LED, wizualizacje i obsługa multimedialna wydarzeń.</p>
+        </div>
+    </div>
+</section>
+
+
+<section id="galeria">
+    <h2>Galeria realizacji</h2>
+    <div class="galeria">
+        <a href="#img1"><img src="koncert1.jpg" alt="Nagłośnienie koncertu"></a>
+        <a href="#img2"><img src="scena2.jpg" alt="Scena plenerowa"></a>
+        <a href="#img3"><img src="oswietlenie3.jpg" alt="Oświetlenie sceniczne"></a>
+        <a href="#img4"><img src="event4.jpg" alt="Event firmowy"></a>
+        <a href="#img5"><img src="konferencja5.jpg" alt="Konferencja nagłośnienie"></a>
+        <a href="#img6"><img src="led6.jpg" alt="Ekran LED"></a>
+		<a href="#img6"><img src="led7.jpg" alt="Ekran LED"></a>
+		<a href="#img6"><img src="led8.jpg" alt="Ekran LED"></a>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="img1" class="lightbox">
+        <a href="#" class="close">&times;</a>
+        <img src="koncert1.jpg" alt="">
+    </div>
+    <div id="img2" class="lightbox">
+        <a href="#" class="close">&times;</a>
+        <img src="img/scena2.jpg" alt="">
+    </div>
+    <div id="img3" class="lightbox">
+        <a href="#" class="close">&times;</a>
+        <img src="img/oswietlenie3.jpg" alt="">
+    </div>
+    <div id="img4" class="lightbox">
+        <a href="#" class="close">&times;</a>
+        <img src="event4.jpg" alt="">
+    </div>
+    <div id="img5" class="lightbox">
+        <a href="#" class="close">&times;</a>
+        <img src="img/konferencja5.jpg" alt="">
+    </div>
+    <div id="img6" class="lightbox">
+        <a href="#" class="close">&times;</a>
+        <img src="img/led6.jpg" alt="">
+    </div>
+</section>
+
+
+<section id="kontakt">
+    <h2>Kontakt</h2>
+	<p><strong>ACCORD Event TECH</strong><br>
+    Artur Wieczorek<br>
+    62-500 Konin</p>
+    <p>E-mail: <a href="mailto:zespol.accord@wp.pl" style="color:#ff6600;">zespol.accord@wp.pl</a></p>
+    <p>Tel: <span style="color:#ff6600;">+48 785 547 334</span></p>
+	<div class="social-icons">
+        <a href="https://facebook.com/accordevent" target="_blank" aria-label="Facebook">
+            <img src="facebook.png" alt="Facebook"style="width:40px; height:40px; vertical-align:middle;">
+		</a>
+		</div>
+		
+</section>
+
+<div style="
+    background-color:#1a1a1a;
+    padding: 15px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    font-weight: bold;
+    color: #ff6600;
+    font-size: 18px;
+">
+    <div style="display: inline-block; animation: moveBrands 25s linear infinite;">
+        🔊 Allen & Heath • 🎤 Shure • 🎧 Sennheiser • 🔉 Dynacord • 🔊 RCF • 🎚️ Audio-Technica • 🔈 JBL • ⚡ Favo Audio • 💡 NAW Audio
+    </div>
+</div>
+
+<footer>    
+    <p>© 2025 ACCORD Event TECH | Wszystkie prawa zastrzeżone</p>
+</footer>
+
+<script>
+// Efekt pojawiania się sekcji
+const sections = document.querySelectorAll("section");
+const revealSections = () => {
+    const triggerBottom = window.innerHeight * 0.85;
+    sections.forEach(sec => {
+        const top = sec.getBoundingClientRect().top;
+        if (top < triggerBottom) sec.classList.add("visible");
+    });
+};
+window.addEventListener("scroll", revealSections);
+revealSections();
+</script>
+<script>
+// ===== GALERIA – POWIĘKSZANIE + STRZAŁKI =====
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.galeria img');
+  let currentIndex = 0;
+
+  // Tworzymy overlay
+  const overlay = document.createElement('div');
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    background: 'rgba(0, 0, 0, 0.9)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: '1000',
+    cursor: 'zoom-out',
+    visibility: 'hidden',
+    opacity: '0',
+    transition: 'opacity 0.3s ease'
+  });
+
+  // Obraz powiększony
+  const fullImg = document.createElement('img');
+  Object.assign(fullImg.style, {
+    maxWidth: '90%',
+    maxHeight: '90%',
+    borderRadius: '12px',
+    boxShadow: '0 0 40px rgba(255, 102, 0, 0.7)',
+    transition: 'transform 0.3s ease'
+  });
+  overlay.appendChild(fullImg);
+
+  // Strzałki nawigacji
+  const arrowLeft = document.createElement('div');
+  const arrowRight = document.createElement('div');
+  arrowLeft.innerHTML = '❮';
+  arrowRight.innerHTML = '❯';
+  [arrowLeft, arrowRight].forEach(arrow => {
+    Object.assign(arrow.style, {
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      fontSize: '3rem',
+      color: '#ff6600',
+      cursor: 'pointer',
+      userSelect: 'none',
+      padding: '10px',
+      transition: 'color 0.3s ease',
+      fontWeight: 'bold'
+    });
+    arrow.addEventListener('mouseenter', () => arrow.style.color = '#ffa64d');
+    arrow.addEventListener('mouseleave', () => arrow.style.color = '#ff6600');
+  });
+  arrowLeft.style.left = '40px';
+  arrowRight.style.right = '40px';
+  overlay.appendChild(arrowLeft);
+  overlay.appendChild(arrowRight);
+
+  document.body.appendChild(overlay);
+
+  // Funkcja otwierająca
+  const showImage = (index) => {
+    currentIndex = index;
+    fullImg.src = images[currentIndex].src;
+    overlay.style.visibility = 'visible';
+    overlay.style.opacity = '1';
+    fullImg.style.transform = 'scale(1)';
+  };
+
+  // Kliknięcie w miniaturkę
+  images.forEach((img, i) => {
+    img.addEventListener('click', () => showImage(i));
+  });
+
+  // Kliknięcie poza zdjęciem – zamyka
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.visibility = 'hidden', 300);
+    }
+  });
+
+  // Nawigacja strzałkami na ekranie
+  arrowLeft.addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    fullImg.src = images[currentIndex].src;
+  });
+
+  arrowRight.addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex + 1) % images.length;
+    fullImg.src = images[currentIndex].src;
+  });
+
+  // Klawiatura ← → oraz ESC
+  document.addEventListener('keydown', (e) => {
+    if (overlay.style.visibility === 'visible') {
+      if (e.key === 'ArrowLeft') {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        fullImg.src = images[currentIndex].src;
+      } else if (e.key === 'ArrowRight') {
+        currentIndex = (currentIndex + 1) % images.length;
+        fullImg.src = images[currentIndex].src;
+      } else if (e.key === 'Escape') {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.style.visibility = 'hidden', 300);
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>
